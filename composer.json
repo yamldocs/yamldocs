@@ -1,0 +1,29 @@
+{
+  "name": "minicli/application",
+  "description": "Minicli Application Template",
+  "license": "MIT",
+  "homepage": "https://github.com/minicli/application",
+  "keywords": ["cli","command-line", "template"],
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "require": {
+    "minicli/minicli": "^3.0",
+    "minicli/command-help": "^0.1.0",
+    "minicli/command-stencil": "^0.1.0",
+    "symfony/yaml": "^6.1"
+  },
+  "require-dev": {
+    "pestphp/pest": "^1.21"
+  },
+  "scripts": {
+    "test" : ["pest"]
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
+}
