@@ -6,6 +6,27 @@
 
 - PHP >=8.1
 
+### Installation and Execution
+
+You can run yamldocs with Docker, using the `minicli/php81` image as follows:
+
+```shell
+docker run --rm -v ${PWD}:/work minicli/php81 /work/yamldocs build markdown file=/work/example.yaml output=/work/example.md
+```
+
+If you prefer to install it locally, you'll need PHP 8.1 and Composer. Then, clone this repository and install dependencies:
+
+```shell
+git clone https://github.com/erikaheidi/yamldocs.git
+cd yamldocs
+composer install
+```
+
+Then you'll be able to run `yamldocs` like this:
+
+```shell
+./yamldocs build markdown file=example.yaml output=example.md
+```
 ### Example YAML
 
 ```yaml
