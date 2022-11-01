@@ -60,7 +60,7 @@ class Document
         $this->markdown = $stencil->applyTemplate(self::$TPL_PAGE, [
             'title' => $title,
             'description' => $description,
-            'content' => $this->buildSections($this->yaml, $this->meta)
+            'content' => $this->buildSections($this->yaml)
         ]);
     }
 
@@ -91,7 +91,7 @@ class Document
             if (is_array($item)) {
                 $refTable = $this->buildReferenceTable($item, $this->getMeta($key) ?? []);
                 $referenceTable = Mark::table($refTable, ['Directive', 'Expects']);
-                $example = Yaml::dump([$key => $item], 6, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
+                $example = $this->getMeta($key)['example'] ?? Yaml::dump([$key => $item], 6, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
             }
 
             $content .= "\n" . $this->buildSectionContent(

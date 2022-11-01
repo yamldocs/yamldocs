@@ -20,6 +20,8 @@ $app = new App([
     'debug' => true
 ]);
 
+$app->setSignature('./yamldocs help');
+
 try {
     $app->runCommand($argv);
 } catch (CommandNotFoundException $notFoundException) {
