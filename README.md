@@ -7,19 +7,12 @@
 yamldocs is built in PHP (cli only) with Minicli. You can run it on a PHP 8.1+ environment or via Docker.
 
 ### Running with Docker
-You can run yamldocs with Docker using the `minicli/php81` image and a volume set to share the application folder.
+You can run yamldocs with Docker using the `erikaheidi/yamldocs` image and a volume set to share your source files (and output folder) with the container.
 
-Start by cloning the repository with:
-
-```shell
-git clone https://github.com/erikaheidi/yamldocs.git
-cd yamldocs
-```
-
-Then, run the following command to generate a single markdown output from a single yaml file:
+The following command will execute yamldocs in a temporary container, generating markdown documents from yaml files located in the `var/yaml` directory and saving the output to `var/output`:
 
 ```shell
-docker run --rm -v ${PWD}:/work minicli/php81 /work/yamldocs build markdown file=/work/example.yaml output=/work/example.md
+docker run --rm -v ${PWD}:/work erikaheidi/yamldocs build docs source=/work/var/yaml output=/work/var/output
 ```
 ### Installing yamldocs locally
 If you prefer to install yamldocs locally, you'll need PHP 8.1 and Composer. Then, clone this repository and install dependencies:
