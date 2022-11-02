@@ -2,19 +2,27 @@
 
 (highly experimental) YAML document describer / markdown generator based on YAML.
 
-## Requirements
+## Installation and Usage
 
-- PHP >=8.1
+yamldocs is built in PHP (cli only) with Minicli. You can run it on a PHP 8.1+ environment or via Docker.
 
-### Installation and Execution
+### Running with Docker
+You can run yamldocs with Docker using the `minicli/php81` image and a volume set to share the application folder.
 
-You can run yamldocs with Docker, using the `minicli/php81` image as follows:
+Start by cloning the repository with:
+
+```shell
+git clone https://github.com/erikaheidi/yamldocs.git
+cd yamldocs
+```
+
+Then, run the following command to generate a single markdown output from a single yaml file:
 
 ```shell
 docker run --rm -v ${PWD}:/work minicli/php81 /work/yamldocs build markdown file=/work/example.yaml output=/work/example.md
 ```
-
-If you prefer to install it locally, you'll need PHP 8.1 and Composer. Then, clone this repository and install dependencies:
+### Installing yamldocs locally
+If you prefer to install yamldocs locally, you'll need PHP 8.1 and Composer. Then, clone this repository and install dependencies:
 
 ```shell
 git clone https://github.com/erikaheidi/yamldocs.git
@@ -27,7 +35,17 @@ Then you'll be able to run `yamldocs` like this:
 ```shell
 ./yamldocs build markdown file=example.yaml output=example.md
 ```
+
+## Building multiple docs at once
+
+Use the `build docs` command to build markdown docs for all YAML files in a directory:
+
+```shell
+./yamldocs build docs source=var/yaml output=var/output
+```
 ### Example YAML
+
+This YAML demonstrates the structure used to define a document and how the markdown is generated:
 
 ```yaml
 Section1: #structure is based on the actual yaml
