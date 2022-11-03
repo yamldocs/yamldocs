@@ -13,6 +13,7 @@ class Document
     public array $yaml = [];
     public array $meta = [];
     public string $markdown;
+    public array $headers = [ 'Directive', 'Details'];
 
     static string $TPL_PAGE = "reference_page";
     static string $TPL_SECTION = "reference_page_section";
@@ -90,7 +91,7 @@ class Document
 
             if (is_array($item)) {
                 $refTable = $this->buildReferenceTable($item, $this->getMeta($key) ?? []);
-                $referenceTable = Mark::table($refTable, ['Directive', 'Expects']);
+                $referenceTable = Mark::table($refTable, $this->headers);
                 $example = $this->getMeta($key)['example'] ?? Yaml::dump([$key => $item], 6, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
             }
 
@@ -137,7 +138,10 @@ class Document
         $listed = [];
         foreach ($content as $item => $value) {
             if (is_numeric($item)) {
-                //this is a numeric array; find nested unique keys
+                if (!is_array($value)) {
+                    $table[] = $this->renderTableRow($value, "", $meta);
+                    continue;
+                }
                 foreach ($value as $key => $exampleValue) {
                     if (!in_array($key, $listed)) {
                         $table[] = $this->renderTableRow($key, $exampleValue, $meta);
