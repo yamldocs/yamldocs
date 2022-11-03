@@ -38,11 +38,20 @@ class DocsController extends CommandController
         }
 
         foreach (glob($dir . "/*.yaml") as $yamlFile) {
-            $document = new Document($yamlFile);
-            $document->buildMarkdown();
-            $document->save($output . "/" . basename($yamlFile) . ".md");
+            $fileOut = $output . "/" . basename($yamlFile) . ".md";
+            $commandCall = ['yamldocs', 'build', 'markdown', "file=$yamlFile", "output=$fileOut"];
+
+            if ($this->hasParam('tpl_dir')) {
+                $commandCall[] = "tpl_dir=" . $this->getParam('tpl_dir');
+            }
+
+            if ($this->hasParam('node')) {
+                $commandCall[] = "node=" . $this->getParam('node');
+            }
+
+            $this->getApp()->runCommand($commandCall);
         }
 
-        $this->getPrinter()->success("Markdown build finished.");
+        $this->getPrinter()->success("Docs markdown build finished.");
     }
 }
