@@ -53,8 +53,8 @@ class Document
      */
     public function buildMarkdown(): void
     {
-        $title = $this->getMeta('_title') ?? basename($this->filePath);
-        $description = $this->getMeta('_description') ?? "$title YAML reference";
+        $title = $this->getMeta('_title') ?? str_replace(".yaml", "", basename($this->filePath));
+        $description = $this->getMeta('_description') ?? "$title reference";
 
         $stencil = new Stencil($this->templateDir);
 
