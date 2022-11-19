@@ -5,22 +5,20 @@ if (php_sapi_name() !== 'cli') {
     exit;
 }
 
-require __DIR__ . '/vendor/autoload.php';
+$root_app = dirname(__DIR__);
+
+if (!is_file($root_app . '/vendor/autoload.php')) {
+    $root_app = dirname(__DIR__, 4);
+}
+
+require $root_app . '/vendor/autoload.php';
 
 use Minicli\App;
 use Minicli\Exception\CommandNotFoundException;
 
-$app = new App([
-    'app_path' => [
-        __DIR__ . '/app/Command',
-        '@minicli/command-help',
-        '@minicli/command-stencil'
-    ],
-    'stencilDir' => __DIR__ . '/templates',
-    'debug' => true
-]);
+$app = new App(require $root_app . '/config.php');
 
-$app->setSignature('./yamldocs help');
+$app->setSignature('./bin/yamldocs help');
 
 try {
     $app->runCommand($argv);

@@ -6,7 +6,8 @@
   "keywords": ["cli","command-line", "template"],
   "autoload": {
     "psr-4": {
-      "App\\": "app/"
+      "App\\": "app/",
+      "Builders\\": "builders"
     }
   },
   "require": {
@@ -25,5 +26,8 @@
     "allow-plugins": {
       "pestphp/pest-plugin": true
     }
-  }
+  },
+  "bin": [
+    "bin/minicli"
+  ]
 }
