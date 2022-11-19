@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Builders\DefaultBuilder;
 use Minicli\FileNotFoundException;
 use Minicli\Stencil;
 use Symfony\Component\Yaml\Yaml;
@@ -13,10 +14,9 @@ class Document
     public array $yaml = [];
     public array $meta = [];
     public string $markdown;
-    public array $headers = [ 'Directive', 'Details'];
-
     static string $TPL_PAGE = "reference_page";
     static string $TPL_SECTION = "reference_page_section";
+    public BuilderInterface $builder;
 
     /**
      * @param string $filePath
@@ -26,7 +26,13 @@ class Document
     {
         $this->filePath = $filePath;
         $this->templateDir = $templateDir ?? __DIR__ . '/../templates';
+        $this->builder = new DefaultBuilder($this->templateDir, self::$TPL_SECTION);
         $this->loadYaml();
+    }
+
+    public function setBuilder(BuilderInterface $builder): void
+    {
+        $this->builder = $builder;
     }
 
     /**
@@ -61,7 +67,7 @@ class Document
         $this->markdown = $stencil->applyTemplate(self::$TPL_PAGE, [
             'title' => $title,
             'description' => $description,
-            'content' => $this->buildSections($this->yaml)
+            'content' => $this->builder->buildSections($this->yaml, $this->meta)
         ]);
     }
 
@@ -76,95 +82,8 @@ class Document
         fclose($outputFile);
     }
 
-    /**
-     * @param array $nodes
-     * @return string
-     * @throws FileNotFoundException
-     */
-    public function buildSections(array $nodes): string
+    public function loadBuilders()
     {
-        $content = "";
 
-        foreach ($nodes as $key => $item) {
-            $referenceTable = "";
-            $example = "";
-
-            if (is_array($item)) {
-                $refTable = $this->buildReferenceTable($item, $this->getMeta($key) ?? []);
-                $referenceTable = Mark::table($refTable, $this->headers);
-                $example = $this->getMeta($key)['example'] ?? Yaml::dump([$key => $item], 6, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
-            }
-
-            $content .= "\n" . $this->buildSectionContent(
-                $key,
-                $this->getMeta($key)['info'] ?? " ",
-                $referenceTable,
-                $example,
-                $this->getMeta($key)['notes'] ?? " "
-            );
-        }
-        return $content;
-    }
-
-    /**
-     * @param string $item
-     * @param string $description
-     * @param string $referenceTable
-     * @param string $example
-     * @param string $notes
-     * @return string
-     * @throws FileNotFoundException
-     */
-    public function buildSectionContent(string $item, string $description, string $referenceTable, string $example, string $notes): string
-    {
-        $stencil = new Stencil($this->templateDir);
-        return $stencil->applyTemplate(self::$TPL_SECTION, [
-                'item' => $item,
-                'description' => $description,
-                'reference_table' => $referenceTable,
-                'example' => $example,
-                'notes' => $notes
-            ]);
-    }
-
-    /**
-     * @param array $content
-     * @param array $meta
-     * @return array
-     */
-    public function buildReferenceTable(array $content, array $meta = []): array
-    {
-        $table = [];
-        $listed = [];
-        foreach ($content as $item => $value) {
-            if (is_numeric($item)) {
-                if (!is_array($value)) {
-                    $table[] = $this->renderTableRow($value, "", $meta);
-                    continue;
-                }
-                foreach ($value as $key => $exampleValue) {
-                    if (!in_array($key, $listed)) {
-                        $table[] = $this->renderTableRow($key, $exampleValue, $meta);
-                        $listed[] = $key;
-                    }
-                }
-                continue;
-            }
-            $table[] = $this->renderTableRow($item, $value, $meta);
-        }
-
-        return $table;
-    }
-
-    public function renderTableRow(string $directive, mixed $details, array $meta = []): array
-    {
-        $valueType = is_array($details) ? "Array" : "String";
-        $details = "($valueType) ";
-
-        if (isset($meta['items'][$directive])) {
-            $details .=  (string) $meta['items'][$directive];
-        }
-
-        return [ $directive, $details ];
     }
 }
