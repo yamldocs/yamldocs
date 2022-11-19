@@ -14,8 +14,8 @@ class Document
     public array $yaml = [];
     public array $meta = [];
     public string $markdown;
-    static string $TPL_PAGE = "reference_page";
-    static string $TPL_SECTION = "reference_page_section";
+    public static string $TPL_PAGE = "reference_page";
+    public static string $TPL_SECTION = "reference_page_section";
     public BuilderInterface $builder;
 
     /**
@@ -80,10 +80,5 @@ class Document
         $outputFile = fopen($filePath, "w+");
         fwrite($outputFile, $this->markdown);
         fclose($outputFile);
-    }
-
-    public function loadBuilders()
-    {
-
     }
 }

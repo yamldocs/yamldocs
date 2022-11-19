@@ -38,12 +38,12 @@ class DefaultBuilder implements BuilderInterface
             }
 
             $content .= "\n" . $this->buildSectionContent(
-                    $key,
-                    $meta[$key]['info'] ?? " ",
-                    $referenceTable,
-                    $example,
-                    $meta[$key]['notes'] ?? " "
-                );
+                $key,
+                $meta[$key]['info'] ?? " ",
+                $referenceTable,
+                $example,
+                $meta[$key]['notes'] ?? " "
+            );
         }
 
         return $content;
