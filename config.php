@@ -7,6 +7,7 @@ return [
         '@minicli/command-stencil'
     ],
     'builders' => [
+        'default' => "Builders\\DefaultBuilder",
         'test' => "Builders\\TestBuilder"
     ],
     'stencilDir' => __DIR__ . '/templates',
