@@ -34,7 +34,7 @@ class MarkdownController extends CommandController
         }
 
         $document = new Document($yamlFile, $templateDir);
-        if ($this->hasParam('builder')) {
+        if ($this->hasParam('builder') && ($this->getParam('builder') !== 'default')) {
             if (!$this->getApp()->config->has('builders')) {
                 throw new \Exception('Missing "builders" configuration.');
             }
@@ -46,7 +46,7 @@ class MarkdownController extends CommandController
             }
 
             $class = $builders[$requestedBuilder];
-            $builder = new $class($templateDir, "reference_page_section");
+            $builder = new $class();
             $document->setBuilder($builder);
         }
 
