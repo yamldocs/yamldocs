@@ -26,7 +26,8 @@ class Document
     {
         $this->filePath = $filePath;
         $this->templateDir = $templateDir ?? __DIR__ . '/../templates';
-        $this->builder = new DefaultBuilder($this->templateDir, self::$TPL_SECTION);
+        $this->builder = new DefaultBuilder();
+        $this->builder->configure($this->templateDir, self::$TPL_SECTION);
         $this->loadYaml();
     }
 
@@ -48,7 +49,11 @@ class Document
         $this->yaml = $document;
     }
 
-    public function getMeta($key)
+    /**
+     * @param $key
+     * @return string|null
+     */
+    public function getMeta($key): ?string
     {
         return $this->meta[$key] ?? null;
     }
@@ -59,7 +64,7 @@ class Document
      */
     public function buildMarkdown(): void
     {
-        $title = $this->getMeta('_title') ?? str_replace(".yaml", "", basename($this->filePath));
+        $title = $this->getName();
         $description = $this->getMeta('_description') ?? "$title reference";
 
         $stencil = new Stencil($this->templateDir);
@@ -80,5 +85,13 @@ class Document
         $outputFile = fopen($filePath, "w+");
         fwrite($outputFile, $this->markdown);
         fclose($outputFile);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->getMeta('_title') ?? str_replace(".yaml", "", basename($this->filePath));
     }
 }

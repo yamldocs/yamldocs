@@ -14,7 +14,7 @@ class DefaultBuilder implements BuilderInterface
     public string $templateDir;
     public string $tplSection;
 
-    public function __construct(string $templateDir, string $tplSection)
+    public function configure(string $templateDir, string $tplSection)
     {
         $this->templateDir = $templateDir;
         $this->tplSection = $tplSection;

@@ -2,6 +2,7 @@
 
 use Minicli\App;
 use Minicli\Command\CommandCall;
+use App\Document;
 
 function getCommandsPath(): string
 {
@@ -30,4 +31,9 @@ function getProdApp(): App
 function getCommandCall(array $parameters = null): CommandCall
 {
     return new CommandCall(array_merge(['minicli'], $parameters));
+}
+
+function getDocument(): Document
+{
+    return new Document(__DIR__ . '/Assets/test.yaml', __DIR__ . '/../templates');
 }
