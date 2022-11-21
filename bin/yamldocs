@@ -5,21 +5,24 @@ if (php_sapi_name() !== 'cli') {
     exit;
 }
 
-$root_app = dirname(__DIR__);
+$app_root = $source_root = dirname(__DIR__);
 
-if (!is_file($root_app . '/vendor/autoload.php')) {
-    $root_app = dirname(__DIR__, 4);
+if (!is_file($app_root . '/vendor/autoload.php')) {
+    $app_root = dirname(__DIR__, 4);
+    $source_root = $app_root . '/vendor/erikaheidi/yamldocs';
 }
 
-require $root_app . '/vendor/autoload.php';
+require $app_root . '/vendor/autoload.php';
 
 use Minicli\App;
 use Minicli\Exception\CommandNotFoundException;
 
-$app = new App(require $root_app . '/config.php');
+$config = include $source_root . '/config.php';
+if (is_file($app_root . '/yamldocs.php')) {
+    $config = array_merge($config, include $app_root . '/yamldocs.php');
+}
 
-$app->setSignature('./bin/yamldocs help');
-
+$app = new App($config);
 try {
     $app->runCommand($argv);
 } catch (CommandNotFoundException $notFoundException) {
