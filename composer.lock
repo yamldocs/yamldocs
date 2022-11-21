@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "acdfa27771b61e617ce0f32cf82eab2f",
+    "content-hash": "e96da864aef6c3bd8c3e7ee13514c831",
     "packages": [
         {
             "name": "minicli/command-help",
