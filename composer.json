@@ -28,6 +28,6 @@
     }
   },
   "bin": [
-    "bin/minicli"
+    "bin/yamldocs"
   ]
 }
