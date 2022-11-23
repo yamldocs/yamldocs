@@ -47,6 +47,10 @@ class MarkdownController extends CommandController
 
             $class = $builders[$requestedBuilder];
             $builder = new $class();
+            $builder->configure([
+                'templateDir' => $templatesDir,
+                'yamlFile' => $yamlFile,
+            ]);
             $document->setBuilder($builder);
         }
 
