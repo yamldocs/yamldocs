@@ -18,7 +18,7 @@ class MarkdownController extends CommandController
         $yamlFile = $this->getParam('file');
         $output = $this->getParam('output');
         $baseDir = __DIR__ . "/../../../";
-        $templateDir = $baseDir . "/templates";
+        $templatesDir = $this->getApp()->config->templatesDir;
 
         if ($yamlFile === null) {
             $this->getPrinter()->error('You must provide a "file=" parameter pointing to the YAML file that you want to build docs from.');
@@ -26,14 +26,14 @@ class MarkdownController extends CommandController
         }
 
         if ($output === null) {
-            $output = $baseDir . '/var/output/' . basename($yamlFile) . '.md';
+            $output = $baseDir . '/' . basename($yamlFile) . '.md';
         }
 
         if ($this->hasParam('tpl_dir')) {
-            $templateDir = $this->getParam('tpl_dir');
+            $templatesDir = $this->getParam('tpl_dir');
         }
 
-        $document = new Document($yamlFile, $templateDir);
+        $document = new Document($yamlFile, $templatesDir);
         if ($this->hasParam('builder') && ($this->getParam('builder') !== 'default')) {
             if (!$this->getApp()->config->has('builders')) {
                 throw new \Exception('Missing "builders" configuration.');
