@@ -9,13 +9,13 @@ use Minicli\FileNotFoundException;
 class DocsController extends CommandController
 {
     /**
-     * @throws FileNotFoundException
      * @throws \Exception
      */
     public function handle(): void
     {
         $dir = $this->getParam('source');
         $output = $this->getParam('output');
+        $builder = "default";
 
         if ($dir === null) {
             $this->getPrinter()->error('You must provide a "source=" parameter pointing to the directory containing yaml files to build docs from.');
@@ -37,9 +37,13 @@ class DocsController extends CommandController
             throw new \Exception("Output $dir not found.");
         }
 
+        if ($this->hasParam('builder') && ($this->getParam('builder') !== 'default')) {
+            $builder = $this->getParam('builder');
+        }
+
         foreach (glob($dir . "/*.yaml") as $yamlFile) {
             $fileOut = $output . "/" . basename($yamlFile) . ".md";
-            $commandCall = ['yamldocs', 'build', 'markdown', "file=$yamlFile", "output=$fileOut"];
+            $commandCall = ['yamldocs', 'build', 'markdown', "file=$yamlFile", "output=$fileOut", "builder=$builder"];
 
             if ($this->hasParam('tpl_dir')) {
                 $commandCall[] = "tpl_dir=" . $this->getParam('tpl_dir');
