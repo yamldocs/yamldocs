@@ -21,6 +21,13 @@ class DefaultBuilder implements BuilderInterface
         $this->setTemplateDir( __DIR__ . '/../templates');
     }
 
+    public function configure(array $options = []): void
+    {
+        if ($options['templateDir']) {
+            $this->setTemplateDir($options['templateDir']);
+        }
+    }
+
     /**
      * @param string $templateDir
      * @return void
