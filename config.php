@@ -10,6 +10,6 @@ return [
         'default' => "Builders\\DefaultBuilder",
         'test' => "Builders\\TestBuilder"
     ],
-    'stencilDir' => __DIR__ . '/templates',
+    'templatesDir' => __DIR__ . '/templates',
     'debug' => true
 ];
