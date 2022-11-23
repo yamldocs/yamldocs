@@ -12,12 +12,41 @@ class DefaultBuilder implements BuilderInterface
 {
     public array $headers = [ 'Directive', 'Details'];
     public string $templateDir;
-    public string $tplSection;
 
-    public function configure(string $templateDir, string $tplSection)
+    public static string $TPL_PAGE = "reference_page";
+    public static string $TPL_SECTION = "reference_page_section";
+
+    public function __construct()
+    {
+        $this->setTemplateDir( __DIR__ . '/../templates');
+    }
+
+    /**
+     * @param string $templateDir
+     * @return void
+     */
+    public function setTemplateDir(string $templateDir)
     {
         $this->templateDir = $templateDir;
-        $this->tplSection = $tplSection;
+    }
+
+    /**
+     * @param string $title
+     * @param string $description
+     * @param array $nodes
+     * @param array $meta
+     * @return string
+     * @throws FileNotFoundException
+     */
+    public function getMarkdown(string $title, string $description, array $nodes, array $meta = []): string
+    {
+        $stencil = new Stencil($this->templateDir);
+
+        return $stencil->applyTemplate(self::$TPL_PAGE, [
+            'title' => $title,
+            'description' => $description,
+            'content' => $this->buildSections($nodes, $meta)
+        ]);
     }
 
     /**
@@ -60,7 +89,7 @@ class DefaultBuilder implements BuilderInterface
     public function buildSectionContent(string $item, string $description, string $referenceTable, string $example, string $notes): string
     {
         $stencil = new Stencil($this->templateDir);
-        return $stencil->applyTemplate($this->tplSection, [
+        return $stencil->applyTemplate(self::$TPL_SECTION, [
             'item' => $item,
             'description' => $description,
             'reference_table' => $referenceTable,
@@ -98,6 +127,12 @@ class DefaultBuilder implements BuilderInterface
         return $table;
     }
 
+    /**
+     * @param string $directive
+     * @param mixed $details
+     * @param array $meta
+     * @return string[]
+     */
     public function renderTableRow(string $directive, mixed $details, array $meta = []): array
     {
         $valueType = is_array($details) ? "Array" : "String";

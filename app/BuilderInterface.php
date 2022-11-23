@@ -4,5 +4,5 @@ namespace App;
 
 interface BuilderInterface
 {
-    public function buildSections(array $nodes): string;
+    public function getMarkdown(string $title, string $description, array $nodes, array $meta = []): string;
 }

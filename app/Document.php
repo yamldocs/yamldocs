@@ -4,7 +4,6 @@ namespace App;
 
 use Builders\DefaultBuilder;
 use Minicli\FileNotFoundException;
-use Minicli\Stencil;
 use Symfony\Component\Yaml\Yaml;
 
 class Document
@@ -14,8 +13,6 @@ class Document
     public array $yaml = [];
     public array $meta = [];
     public string $markdown;
-    public static string $TPL_PAGE = "reference_page";
-    public static string $TPL_SECTION = "reference_page_section";
     public BuilderInterface $builder;
 
     /**
@@ -27,7 +24,7 @@ class Document
         $this->filePath = $filePath;
         $this->templateDir = $templateDir ?? __DIR__ . '/../templates';
         $this->builder = new DefaultBuilder();
-        $this->builder->configure($this->templateDir, self::$TPL_SECTION);
+        $this->builder->setTemplateDir($this->templateDir);
         $this->loadYaml();
     }
 
@@ -67,13 +64,7 @@ class Document
         $title = $this->getName();
         $description = $this->getMeta('_description') ?? "$title reference";
 
-        $stencil = new Stencil($this->templateDir);
-
-        $this->markdown = $stencil->applyTemplate(self::$TPL_PAGE, [
-            'title' => $title,
-            'description' => $description,
-            'content' => $this->builder->buildSections($this->yaml, $this->meta)
-        ]);
+        $this->markdown = $this->builder->getMarkdown($title, $description, $this->yaml, $this->meta);
     }
 
     /**
