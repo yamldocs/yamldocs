@@ -28,6 +28,10 @@ class Document
         $this->loadYaml();
     }
 
+    /**
+     * @param BuilderInterface $builder
+     * @return void
+     */
     public function setBuilder(BuilderInterface $builder): void
     {
         $this->builder = $builder;
@@ -38,12 +42,27 @@ class Document
      */
     public function loadYaml(): void
     {
-        $document = Yaml::parseFile($this->filePath);
-        if (isset($document['_meta'])) {
-            $this->meta = $document['_meta'];
-            unset($document['_meta']);
+        $this->yaml = Yaml::parseFile($this->filePath);
+        $this->loadMetadata();
+    }
+
+    /**
+     * @return void
+     */
+    public function loadMetadata(): void
+    {
+        $meta = [];
+        $metaFile = dirname($this->filePath) . '/_meta/' . basename($this->filePath);
+        if (is_file($metaFile)) {
+              $meta = Yaml::parseFile($metaFile);
         }
-        $this->yaml = $document;
+
+        if (isset($this->yaml['_meta'])) {
+            $meta = array_merge($meta, $this->yaml['_meta']);
+            unset($this->yaml['_meta']);
+        }
+
+        $this->meta = $meta;
     }
 
     /**
