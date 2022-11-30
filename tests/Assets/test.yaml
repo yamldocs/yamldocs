@@ -20,3 +20,6 @@ accounts:
 
 archs:
 - x86_64
+
+_meta:
+  title: "My test title"

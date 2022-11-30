@@ -3,6 +3,7 @@
 namespace Builders;
 
 use App\BuilderInterface;
+use App\Document;
 
 class TestBuilder implements BuilderInterface
 {
@@ -11,7 +12,7 @@ class TestBuilder implements BuilderInterface
         //
     }
 
-    public function getMarkdown(string $title, string $description, array $nodes, array $meta = []): string
+    public function getMarkdown(Document $document): string
     {
         return "test";
     }
