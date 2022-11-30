@@ -42,7 +42,7 @@ class Document
         $meta = [];
         $metaFile = dirname($this->filePath) . '/_meta/' . basename($this->filePath);
         if (is_file($metaFile)) {
-              $meta = Yaml::parseFile($metaFile);
+            $meta = Yaml::parseFile($metaFile);
         }
 
         if (isset($this->yaml['_meta'])) {

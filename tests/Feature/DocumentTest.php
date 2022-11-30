@@ -18,7 +18,7 @@ test('YAML is correctly loaded', function () {
     $this->assertArrayHasKey('accounts', $document->yaml);
 });
 
-test('Metadata is loaded', function ()  {
+test('Metadata is loaded', function () {
     $document = getDocument();
     $this->assertEquals("My test title", $document->title);
 });
