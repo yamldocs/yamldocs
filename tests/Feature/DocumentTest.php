@@ -1,22 +1,9 @@
 <?php
 
-use App\Document;
-use Builders\DefaultBuilder;
-use Builders\TestBuilder;
-use Symfony\Component\Yaml\Yaml;
-
-test('Document is created and default builder is set', function () {
+test('Document is created', function () {
     $document = getDocument();
 
     $this->assertEquals("test.yaml", basename($document->filePath));
-    $this->assertInstanceOf(DefaultBuilder::class, $document->builder);
-});
-
-test('Custom builder can be set', function () {
-    $document = getDocument();
-    $builder = new TestBuilder();
-    $document->setBuilder($builder);
-    $this->assertInstanceOf(TestBuilder::class, $document->builder);
 });
 
 test('Name is correctly set', function () {
@@ -31,9 +18,7 @@ test('YAML is correctly loaded', function () {
     $this->assertArrayHasKey('accounts', $document->yaml);
 });
 
-test('Markdown is generated', function () {
+test('Metadata is loaded', function ()  {
     $document = getDocument();
-    $document->buildMarkdown();
-
-    $this->assertStringContainsString("## contents", $document->markdown);
+    $this->assertEquals("My test title", $document->title);
 });

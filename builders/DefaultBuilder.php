@@ -3,6 +3,7 @@
 namespace Builders;
 
 use App\BuilderInterface;
+use App\Document;
 use App\Mark;
 use Minicli\FileNotFoundException;
 use Minicli\Stencil;
@@ -38,21 +39,18 @@ class DefaultBuilder implements BuilderInterface
     }
 
     /**
-     * @param string $title
-     * @param string $description
-     * @param array $nodes
-     * @param array $meta
+     * @param Document $document
      * @return string
      * @throws FileNotFoundException
      */
-    public function getMarkdown(string $title, string $description, array $nodes, array $meta = []): string
+    public function getMarkdown(Document $document): string
     {
         $stencil = new Stencil($this->templateDir);
 
         return $stencil->applyTemplate(self::$TPL_PAGE, [
-            'title' => $title,
-            'description' => $description,
-            'content' => $this->buildSections($nodes, $meta)
+            'title' => $document->title,
+            'description' => $document->getMeta('description'),
+            'content' => $this->buildSections($document->yaml, $document->meta)
         ]);
     }
 

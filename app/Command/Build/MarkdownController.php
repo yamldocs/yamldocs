@@ -3,6 +3,7 @@
 namespace App\Command\Build;
 
 use App\Document;
+use Builders\DefaultBuilder;
 use Minicli\Command\CommandController;
 use Minicli\FileNotFoundException;
 use Symfony\Component\Yaml\Yaml;
@@ -25,15 +26,17 @@ class MarkdownController extends CommandController
             throw new \Exception("Missing 'file' parameter");
         }
 
-        if ($output === null) {
-            $output = $baseDir . '/' . basename($yamlFile) . '.md';
-        }
-
         if ($this->hasParam('tpl_dir')) {
             $templatesDir = $this->getParam('tpl_dir');
         }
 
         $document = new Document($yamlFile, $templatesDir);
+        $builder = new DefaultBuilder();
+
+        if ($output === null) {
+            $output = $baseDir . '/' . $document->getName() . '.md';
+        }
+
         if ($this->hasParam('builder') && ($this->getParam('builder') !== 'default')) {
             if (!$this->getApp()->config->has('builders')) {
                 throw new \Exception('Missing "builders" configuration.');
@@ -47,12 +50,12 @@ class MarkdownController extends CommandController
 
             $class = $builders[$requestedBuilder];
             $builder = new $class();
-            $builder->configure([
-                'templateDir' => $templatesDir,
-                'yamlFile' => $yamlFile,
-            ]);
-            $document->setBuilder($builder);
         }
+
+        $builder->configure([
+            'templateDir' => $templatesDir,
+            'yamlFile' => $yamlFile,
+        ]);
 
         if ($this->hasParam('node')) {
             $node = explode('.', $this->getParam('node'));
@@ -65,8 +68,8 @@ class MarkdownController extends CommandController
             }
             $document->yaml = $section;
         }
-        $document->buildMarkdown();
-        $document->save($output);
+        $document->markdown = $builder->getMarkdown($document);
+        $document->saveMarkdown($output);
 
         $this->getPrinter()->success("Finished building $output.");
     }

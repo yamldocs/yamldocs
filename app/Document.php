@@ -2,18 +2,16 @@
 
 namespace App;
 
-use Builders\DefaultBuilder;
-use Minicli\FileNotFoundException;
 use Symfony\Component\Yaml\Yaml;
 
 class Document
 {
     public string $filePath;
     public string $templateDir;
+    public string $title;
     public array $yaml = [];
     public array $meta = [];
     public string $markdown;
-    public BuilderInterface $builder;
 
     /**
      * @param string $filePath
@@ -23,18 +21,7 @@ class Document
     {
         $this->filePath = $filePath;
         $this->templateDir = $templateDir ?? __DIR__ . '/../templates';
-        $this->builder = new DefaultBuilder();
-        $this->builder->setTemplateDir($this->templateDir);
         $this->loadYaml();
-    }
-
-    /**
-     * @param BuilderInterface $builder
-     * @return void
-     */
-    public function setBuilder(BuilderInterface $builder): void
-    {
-        $this->builder = $builder;
     }
 
     /**
@@ -44,6 +31,7 @@ class Document
     {
         $this->yaml = Yaml::parseFile($this->filePath);
         $this->loadMetadata();
+        $this->title = $this->getTitle();
     }
 
     /**
@@ -75,22 +63,10 @@ class Document
     }
 
     /**
-     * @return void
-     * @throws FileNotFoundException
-     */
-    public function buildMarkdown(): void
-    {
-        $title = $this->getName();
-        $description = $this->getMeta('_description') ?? "$title reference";
-
-        $this->markdown = $this->builder->getMarkdown($title, $description, $this->yaml, $this->meta);
-    }
-
-    /**
      * @param string $filePath
      * @return void
      */
-    public function save(string $filePath): void
+    public function saveMarkdown(string $filePath): void
     {
         $outputFile = fopen($filePath, "w+");
         fwrite($outputFile, $this->markdown);
@@ -100,8 +76,16 @@ class Document
     /**
      * @return string
      */
+    public function getTitle(): string
+    {
+        return $this->getMeta('title') ?? $this->getName();
+    }
+
+    /**
+     * @return string
+     */
     public function getName(): string
     {
-        return $this->getMeta('_title') ?? str_replace(".yaml", "", basename($this->filePath));
+        return str_replace(".yaml", "", basename($this->filePath));
     }
 }
