@@ -34,7 +34,7 @@ class DocsController extends CommandController
 
         if (!is_dir($output)) {
             $this->getPrinter()->error('Output directory not found.');
-            throw new \Exception("Output $dir not found.");
+            throw new \Exception("Output $output not found.");
         }
 
         if ($this->hasParam('builder') && ($this->getParam('builder') !== 'default')) {
@@ -42,7 +42,7 @@ class DocsController extends CommandController
         }
 
         foreach (glob($dir . "/*.yaml") as $yamlFile) {
-            $fileOut = $output . "/" . basename($yamlFile) . ".md";
+            $fileOut = $output . "/" . str_replace(".yaml", "", basename($yamlFile)) . '.md';
             $commandCall = ['yamldocs', 'build', 'markdown', "file=$yamlFile", "output=$fileOut", "builder=$builder"];
 
             if ($this->hasParam('tpl_dir')) {
