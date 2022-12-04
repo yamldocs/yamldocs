@@ -6,14 +6,6 @@
 
 yamldocs is built in PHP (cli only) with Minicli. You can run it on a PHP 8.1+ environment or via Docker.
 
-### Running with Docker
-You can run yamldocs with Docker using the `erikaheidi/yamldocs` image and a volume set to share your source files (and output folder) with the container.
-
-The following command will execute yamldocs in a temporary container, generating markdown documents from yaml files located in the `var/yaml` directory and saving the output to `var/output`:
-
-```shell
-docker run --rm -v ${PWD}:/work erikaheidi/yamldocs build docs source=/work/var/yaml output=/work/var/output
-```
 ### Installing yamldocs locally
 If you prefer to install yamldocs locally, you'll need PHP 8.1 and Composer. Then, clone this repository and install dependencies:
 
@@ -26,17 +18,19 @@ composer install
 Then you'll be able to run `yamldocs` like this:
 
 ```shell
-./yamldocs build markdown file=example.yaml output=example.md
+./bin/yamldocs build markdown file=example.yaml output=example.md
 ```
 
-## Building multiple docs at once
+### Running with Docker
+You can run yamldocs with Docker using the `erikaheidi/yamldocs` image and a volume set to share your source files (and output folder) with the container.
 
-Use the `build docs` command to build markdown docs for all YAML files in a directory:
+The following command will execute yamldocs in a temporary container, generating markdown documents from yaml files located in the `var/yaml` directory and saving the output to `var/output`:
 
 ```shell
-./yamldocs build docs source=var/yaml output=var/output
+docker run --rm -v ${PWD}:/work erikaheidi/yamldocs build docs source=/work/var/yaml output=/work/var/output
 ```
-### Example YAML
+
+## Example YAML
 
 This YAML demonstrates the structure used to define a document and how the markdown is generated:
 
@@ -83,7 +77,7 @@ _meta:
 The following command will generate a markdown document based on the `example.yaml` YAML file, saving it to a file called `example.md` on the current directory:
 
 ```shell
-./yamldocs build markdown file=example.yaml output=example.md
+./bin/yamldocs build markdown file=example.yaml output=example.md
 ```
 
 ### Generated markdown content:
@@ -195,6 +189,14 @@ Section2:
   Item1:
     - value01
     - value02
+```
+
+## Building multiple docs at once
+
+Use the `build docs` command to build markdown docs for all YAML files in a directory:
+
+```shell
+./bin/yamldocs build docs source=var/yaml output=var/output
 ```
 
  
