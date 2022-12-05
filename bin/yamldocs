@@ -28,7 +28,7 @@ $paths[] = $source_root . '/app/Command';
 $config->set('app_path', $paths);
 
 if (is_file($app_root . '/yamldocs.yaml')) {
-    $config->load($app_root . '/yamldocs.yaml');
+    $config->merge($app_root . '/yamldocs.yaml');
 }
 
 $app = new App($config->parameters);
