@@ -1,0 +1,10 @@
+app_path:
+    - "@minicli/command-help"
+    - "@minicli/command-stencil"
+
+builders:
+    default: Builders\\DefaultBuilder
+    test: Builders\\TestBuilder
+
+templatesDir: templates
+debug: true
