@@ -1,5 +1,9 @@
 # yamldocs
 [![PHP Composer](https://github.com/erikaheidi/yamldocs/actions/workflows/php.yml/badge.svg)](https://github.com/erikaheidi/yamldocs/actions/workflows/php.yml)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/erikaheidi/yamldocs?color=00BB00&label=Latest&sort=semver)
+![GitHub](https://img.shields.io/github/license/erikaheidi/yamldocs)
+![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/erikaheidi/yamldocs/minicli/minicli)
+![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/erikaheidi/yamldocs/symfony/yaml)
 
 Yamldocs is a markdown document generator based on YAML files, written in PHP with Minicli. It can be used as a standalone app or included as a Composer bin command to be used within existing projects. It is useful to create automated reference docs that can be customized through templates and a common builder interface.
 
@@ -121,5 +125,5 @@ Use the `build docs` command to build markdown docs for all YAML files in a dire
 ./bin/yamldocs build docs source=var/yaml output=var/output --recursive
 ```
 
-Check the full docs at https://yamldocs.dev.
+For more information and detailed usage instructions, check the full docs at https://yamldocs.dev.
  
