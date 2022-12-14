@@ -6,7 +6,6 @@ use App\Document;
 use Builders\DefaultBuilder;
 use Minicli\Command\CommandController;
 use Minicli\FileNotFoundException;
-use Symfony\Component\Yaml\Yaml;
 
 class MarkdownController extends CommandController
 {
