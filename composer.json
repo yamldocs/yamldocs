@@ -1,20 +1,20 @@
 {
-  "name": "erikaheidi/yamldocs",
-  "description": "Experimental YAML Reference Builder / Markdown Document Generator",
+  "name": "yamldocs/yamldocs",
+  "description": "YAML Reference Builder / Markdown Document Generator",
   "license": "MIT",
-  "homepage": "https://github.com/erikaheidi/yamldocs",
+  "homepage": "https://yamldocs.dev",
   "keywords": ["documentation","yaml", "cli"],
   "autoload": {
     "psr-4": {
       "App\\": "app/",
-      "Builders\\": "builders"
+      "Yamldocs\\": "src/"
     }
   },
   "require": {
-    "minicli/minicli": "^3.0",
-    "minicli/command-help": "^0.1.0",
-    "minicli/command-stencil": "^0.1.0",
-    "symfony/yaml": "^6.1"
+    "minicli/minicli": "^4.0",
+    "minicli/command-help": "^1.0",
+    "symfony/yaml": "^6.1",
+    "minicli/stencil": "^0.1.1"
   },
   "require-dev": {
     "pestphp/pest": "^1.21"

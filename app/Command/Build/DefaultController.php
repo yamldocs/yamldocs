@@ -9,6 +9,6 @@ class DefaultController extends CommandController
 {
     public function handle(): void
     {
-        $this->getPrinter()->info('Run ./yamldocs build markdown');
+        $this->info('Run ./yamldocs build markdown');
     }
 }

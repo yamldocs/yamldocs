@@ -1,6 +1,6 @@
 <?php
 
-use App\YamlConfig;
+use Yamldocs\YamlConfig;
 
 test('YAML config is loaded', function () {
     $config = new YamlConfig();

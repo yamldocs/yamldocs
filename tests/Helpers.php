@@ -2,35 +2,30 @@
 
 use Minicli\App;
 use Minicli\Command\CommandCall;
-use App\Document;
+use Minicli\Config;
+use Yamldocs\BuilderService;
+use Yamldocs\Document;
+use Yamldocs\YamlConfig;
 
 function getCommandsPath(): string
 {
     return __DIR__ . '/../app/Command';
 }
 
+function getConfigAsArray(): array
+{
+    $config = new YamlConfig();
+    $config->load(__DIR__ . '/../config.yaml');
+    $config->set('app_path', getCommandsPath());
+    return $config->parameters;
+}
+
 function getApp(): App
 {
-    $config = [
-        'app_path' => getCommandsPath()
-    ];
+    $app = new App(getConfigAsArray());
+    $app->addService('builder', new BuilderService());
 
-    return new App($config);
-}
-
-function getProdApp(): App
-{
-    $config = [
-        'app_path' => getCommandsPath(),
-        'debug' => false
-    ];
-
-    return new App($config);
-}
-
-function getCommandCall(array $parameters = null): CommandCall
-{
-    return new CommandCall(array_merge(['minicli'], $parameters));
+    return $app;
 }
 
 function getDocument(): Document

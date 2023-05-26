@@ -1,13 +1,14 @@
 <?php
 
-namespace Builders;
+namespace Yamldocs\Builder;
 
-use App\BuilderInterface;
-use App\Document;
+use Minicli\Config;
+use Yamldocs\BuilderInterface;
+use Yamldocs\Document;
 
 class TestBuilder implements BuilderInterface
 {
-    public function configure(array $options = []): void
+    public function configure(Config $config): void
     {
         //
     }

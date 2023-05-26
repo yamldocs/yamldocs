@@ -1,41 +1,53 @@
 <?php
 
-namespace Builders;
+namespace Yamldocs\Builder;
 
-use App\BuilderInterface;
-use App\Document;
-use App\Mark;
+use Minicli\Config;
 use Minicli\FileNotFoundException;
 use Minicli\Stencil;
 use Symfony\Component\Yaml\Yaml;
+use Yamldocs\BuilderInterface;
+use Yamldocs\Document;
+use Yamldocs\Mark;
 
 class DefaultBuilder implements BuilderInterface
 {
-    public array $headers = [ 'Directive', 'Details'];
-    public string $templateDir;
+    public array $headers = ['Directive', 'Details'];
+    public string $templatesDir;
 
     public static string $TPL_PAGE = "reference_page";
     public static string $TPL_SECTION = "reference_page_section";
 
     public function __construct()
     {
-        $this->setTemplateDir(__DIR__ . '/../templates');
-    }
-
-    public function configure(array $options = []): void
-    {
-        if ($options['templateDir']) {
-            $this->setTemplateDir($options['templateDir']);
-        }
+        $this->setTemplatesDir(__DIR__ . '/../templates');
     }
 
     /**
-     * @param string $templateDir
+     * @throws FileNotFoundException
+     */
+    public function configure(Config $config): void
+    {
+        if ($config->has('templatesDir')) {
+            $templatesDir = $config->templatesDir;
+            if (!is_dir($templatesDir)) {
+                if (!is_dir($config->app_root . '/' . $templatesDir)) {
+                    throw new FileNotFoundException("Templates directory not found.");
+                }
+                $templatesDir = $config->app_root . '/' . $templatesDir;
+            }
+            $this->setTemplatesDir($templatesDir);
+        }
+        
+    }
+
+    /**
+     * @param string $templatesDir
      * @return void
      */
-    public function setTemplateDir(string $templateDir)
+    public function setTemplatesDir(string $templatesDir): void
     {
-        $this->templateDir = $templateDir;
+        $this->templatesDir = $templatesDir;
     }
 
     /**
@@ -45,7 +57,7 @@ class DefaultBuilder implements BuilderInterface
      */
     public function getMarkdown(Document $document): string
     {
-        $stencil = new Stencil($this->templateDir);
+        $stencil = new Stencil($this->templatesDir);
 
         return $stencil->applyTemplate(self::$TPL_PAGE, [
             'title' => $document->title,
@@ -93,7 +105,7 @@ class DefaultBuilder implements BuilderInterface
      */
     public function buildSectionContent(string $item, string $description, string $referenceTable, string $example, string $notes): string
     {
-        $stencil = new Stencil($this->templateDir);
+        $stencil = new Stencil($this->templatesDir);
         return $stencil->applyTemplate(self::$TPL_SECTION, [
             'item' => $item,
             'description' => $description,

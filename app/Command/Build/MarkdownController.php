@@ -2,17 +2,17 @@
 
 namespace App\Command\Build;
 
-use App\Document;
-use Builders\DefaultBuilder;
+use Exception;
 use Minicli\Command\CommandController;
 use Minicli\FileNotFoundException;
-use Symfony\Component\Yaml\Yaml;
+use Yamldocs\Builder\DefaultBuilder;
+use Yamldocs\Document;
 
 class MarkdownController extends CommandController
 {
     /**
      * @throws FileNotFoundException
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(): void
     {
@@ -22,8 +22,8 @@ class MarkdownController extends CommandController
         $templatesDir = $this->getApp()->config->templatesDir;
 
         if ($yamlFile === null) {
-            $this->getPrinter()->error('You must provide a "file=" parameter pointing to the YAML file that you want to build docs from.');
-            throw new \Exception("Missing 'file' parameter");
+            $this->error('You must provide a "file=" parameter pointing to the YAML file that you want to build docs from.');
+            throw new Exception("Missing 'file' parameter");
         }
 
         if ($this->hasParam('tpl_dir')) {
@@ -39,23 +39,20 @@ class MarkdownController extends CommandController
 
         if ($this->hasParam('builder') && ($this->getParam('builder') !== 'default')) {
             if (!$this->getApp()->config->has('builders')) {
-                throw new \Exception('Missing "builders" configuration.');
+                throw new Exception('Missing "builders" configuration.');
             }
 
             $requestedBuilder = $this->getParam('builder');
             $builders = $this->getApp()->config->builders;
             if (!isset($builders[$requestedBuilder])) {
-                throw new \Exception("Configuration not found for builder $requestedBuilder");
+                throw new Exception("Configuration not found for builder $requestedBuilder");
             }
 
             $class = $builders[$requestedBuilder];
             $builder = new $class();
         }
 
-        $builder->configure([
-            'templateDir' => $templatesDir,
-            'yamlFile' => $yamlFile,
-        ]);
+        $builder->configure($this->getApp()->config);
 
         if ($this->hasParam('node')) {
             $node = explode('.', $this->getParam('node'));
@@ -71,6 +68,6 @@ class MarkdownController extends CommandController
         $document->markdown = $builder->getMarkdown($document);
         $document->saveMarkdown($output);
 
-        $this->getPrinter()->success("Finished building $output.");
+        $this->success("Finished building $output.");
     }
 }

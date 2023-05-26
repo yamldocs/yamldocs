@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Yamldocs;
 
 use Symfony\Component\Yaml\Yaml;
 

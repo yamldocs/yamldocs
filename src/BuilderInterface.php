@@ -1,10 +1,12 @@
 <?php
 
-namespace App;
+namespace Yamldocs;
+
+use Minicli\Config;
 
 interface BuilderInterface
 {
-    public function configure(array $options = []): void;
+    public function configure(Config $config): void;
 
     public function getMarkdown(Document $document): string;
 }
