@@ -18,11 +18,6 @@ class DefaultBuilder implements BuilderInterface
     public static string $TPL_PAGE = "reference_page";
     public static string $TPL_SECTION = "reference_page_section";
 
-    public function __construct()
-    {
-        $this->setTemplatesDir(__DIR__ . '/../templates');
-    }
-
     /**
      * @throws FileNotFoundException
      */
@@ -38,7 +33,6 @@ class DefaultBuilder implements BuilderInterface
             }
             $this->setTemplatesDir($templatesDir);
         }
-        
     }
 
     /**

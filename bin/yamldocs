@@ -19,9 +19,9 @@ require $app_root . '/vendor/autoload.php';
 use Minicli\App;
 use Minicli\Exception\CommandNotFoundException;
 use Yamldocs\BuilderService;
-use Yamldocs\YamlConfig;
+use Yamldocs\YamldocsConfig;
 
-$config = new YamlConfig();
+$config = new YamldocsConfig();
 $config->load($source_root . '/config.yaml');
 
 $paths = [

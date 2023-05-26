@@ -17,8 +17,9 @@ class BuilderService implements ServiceInterface
         }
 
         foreach ($builders as $name => $builderClass) {
-
-            $this->registerBuilder($name, new $builderClass);
+            $builder = new $builderClass;
+            $builder->configure($app->config);
+            $this->registerBuilder($name, $builder);
         }
     }
 

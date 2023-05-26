@@ -7,7 +7,6 @@ use Symfony\Component\Yaml\Yaml;
 class Document
 {
     public string $filePath;
-    public string $templateDir;
     public string $title;
     public array $yaml = [];
     public array $meta = [];
@@ -15,12 +14,10 @@ class Document
 
     /**
      * @param string $filePath
-     * @param string|null $templateDir
      */
-    public function __construct(string $filePath, string $templateDir = null)
+    public function __construct(string $filePath)
     {
         $this->filePath = $filePath;
-        $this->templateDir = $templateDir ?? __DIR__ . '/../templates';
         $this->loadYaml();
     }
 

@@ -5,7 +5,7 @@ use Minicli\Command\CommandCall;
 use Minicli\Config;
 use Yamldocs\BuilderService;
 use Yamldocs\Document;
-use Yamldocs\YamlConfig;
+use Yamldocs\YamldocsConfig;
 
 function getCommandsPath(): string
 {
@@ -14,7 +14,7 @@ function getCommandsPath(): string
 
 function getConfigAsArray(): array
 {
-    $config = new YamlConfig();
+    $config = new YamldocsConfig();
     $config->load(__DIR__ . '/../config.yaml');
     $config->set('app_path', getCommandsPath());
     return $config->parameters;
