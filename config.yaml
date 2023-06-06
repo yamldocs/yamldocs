@@ -1,6 +1,6 @@
 builders:
-    default: Yamldocs\Builder\DefaultBuilder
-    test: Yamldocs\Builder\TestBuilder
+    - name: default
+      class: Yamldocs\Builder\DefaultBuilder
 
 templatesDir: templates
 debug: true

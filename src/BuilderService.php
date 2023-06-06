@@ -16,10 +16,11 @@ class BuilderService implements ServiceInterface
             throw new \Exception("'builders' config not found.");
         }
 
-        foreach ($builders as $name => $builderClass) {
+        foreach ($builders as $builderConfig) {
+            $builderClass = $builderConfig['class'];
             $builder = new $builderClass;
-            $builder->configure($app->config);
-            $this->registerBuilder($name, $builder);
+            $builder->configure($app->config, $builderConfig);
+            $this->registerBuilder($builderConfig['name'], $builder);
         }
     }
 

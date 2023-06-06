@@ -18,3 +18,10 @@ test('DefaultBuilder loads YAML', function () {
 
     $this->assertStringContainsString("### Reference", $markdown);
 });
+
+test('DefaultBuilder has default templatesDir', function () {
+    $builder = new DefaultBuilder();
+    $builder->configure(new Config(getConfigAsArray()));
+
+    $this->assertSame("templates", $builder->templatesDir);
+});

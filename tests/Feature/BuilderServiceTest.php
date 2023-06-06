@@ -15,3 +15,11 @@ test('Builder Service loads builders from config.yaml file', function() {
     $this->assertInstanceOf(DefaultBuilder::class, $app->builder->getBuilder('default'));
     $this->assertInstanceOf(TestBuilder::class, $app->builder->getBuilder('test'));
 });
+
+test('Builder Service loads custom builder config options', function() {
+    $app = getApp(__DIR__ . '/../Assets/config_alt.yaml');
+    $defaultBuilder = $app->builder->getBuilder('default');
+
+    expect($defaultBuilder->builderOptions)->not()->toBeEmpty()
+        ->and($defaultBuilder->templatesDir)->toContain("templates/default");
+});

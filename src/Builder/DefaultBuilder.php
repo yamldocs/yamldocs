@@ -14,25 +14,28 @@ class DefaultBuilder implements BuilderInterface
 {
     public array $headers = ['Directive', 'Details'];
     public string $templatesDir;
-
-    public static string $TPL_PAGE = "reference_page";
-    public static string $TPL_SECTION = "reference_page_section";
+    public array $builderOptions;
+    public string $tplPage;
+    public string $tplSection;
 
     /**
      * @throws FileNotFoundException
      */
-    public function configure(Config $config): void
+    public function configure(Config $config, array $builderOptions = []): void
     {
-        if ($config->has('templatesDir')) {
-            $templatesDir = $config->templatesDir;
-            if (!is_dir($templatesDir)) {
-                if (!is_dir($config->app_root . '/' . $templatesDir)) {
-                    throw new FileNotFoundException("Templates directory not found.");
-                }
-                $templatesDir = $config->app_root . '/' . $templatesDir;
+        $this->builderOptions = $builderOptions;
+        $templatesDir = $this->builderOptions['templatesDir'] ?? $config->templatesDir;
+
+        if (!is_dir($templatesDir)) {
+            if (!is_dir($config->app_root . '/' . $templatesDir)) {
+                throw new FileNotFoundException("Templates directory not found.");
             }
-            $this->setTemplatesDir($templatesDir);
+            $templatesDir = $config->app_root . '/' . $templatesDir;
         }
+        $this->setTemplatesDir($templatesDir);
+
+        $this->tplPage = $this->builderOptions['tplPage'] ?? "reference_page";
+        $this->tplSection = $this->builderOptions['tplSection'] ?? "reference_page_section";
     }
 
     /**
@@ -53,7 +56,7 @@ class DefaultBuilder implements BuilderInterface
     {
         $stencil = new Stencil($this->templatesDir);
 
-        return $stencil->applyTemplate(self::$TPL_PAGE, [
+        return $stencil->applyTemplate($this->tplPage, [
             'title' => $document->title,
             'description' => $document->getMeta('description'),
             'content' => $this->buildSections($document->yaml, $document->meta)
@@ -100,7 +103,7 @@ class DefaultBuilder implements BuilderInterface
     public function buildSectionContent(string $item, string $description, string $referenceTable, string $example, string $notes): string
     {
         $stencil = new Stencil($this->templatesDir);
-        return $stencil->applyTemplate(self::$TPL_SECTION, [
+        return $stencil->applyTemplate($this->tplSection, [
             'item' => $item,
             'description' => $description,
             'reference_table' => $referenceTable,
