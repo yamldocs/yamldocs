@@ -42,21 +42,77 @@ class DocsController extends CommandController
             $builder = $this->getParam('builder');
         }
 
-        foreach (glob($dir . "/*.yaml") as $yamlFile) {
-            $fileOut = $output . "/" . str_replace(".yaml", "", basename($yamlFile)) . '.md';
-            $commandCall = ['yamldocs', 'build', 'markdown', "file=$yamlFile", "output=$fileOut", "builder=$builder"];
-
-            if ($this->hasParam('tpl_dir')) {
-                $commandCall[] = "tpl_dir=" . $this->getParam('tpl_dir');
+        foreach (glob($dir . "/*") as $input) {
+            if (is_dir($input) && !$this->hasFlag('recursive')) {
+                continue;
             }
 
-            if ($this->hasParam('node')) {
-                $commandCall[] = "node=" . $this->getParam('node');
-            }
-
-            $this->getApp()->runCommand($commandCall);
+            $this->buildDocs($input, $output, $builder);
         }
 
         $this->success("Docs markdown build finished.");
+    }
+
+    /**
+     * @param string $input
+     * @param string $output
+     * @param string $builder
+     * @return void
+     * @throws CommandNotFoundException
+     */
+    public function buildDocs(string $input, string $output, string $builder): void
+    {
+        if (is_dir($input)) {
+            if (basename($input) === "_meta") {
+                return;
+            }
+
+            foreach (glob($input . "/*") as $path) {
+                $outputDir = $output . "/" . basename(dirname($path));
+                $this->buildDocs($path, $outputDir, $builder);
+            }
+            return;
+        }
+
+        if (!is_dir($output)) {
+            mkdir($output, 0777, true);
+        }
+        $fileOut = $output . "/" . $this->getOutputPath($input);
+        $commandCall = $this->getCommandCall($input, $fileOut, $builder);
+
+        if ($this->hasParam('tpl_dir')) {
+            $commandCall[] = "tpl_dir=" . $this->getParam('tpl_dir');
+        }
+
+        if ($this->hasParam('node')) {
+            $commandCall[] = "node=" . $this->getParam('node');
+        }
+
+        try {
+            $this->getApp()->runCommand($commandCall);
+        } catch (InputError $exception) {
+            $this->getPrinter()->out("Invalid YAML found: $input. Skipping...");
+        }
+
+    }
+
+    /**
+     * @param string $sourcePath
+     * @return string
+     */
+    public function getOutputPath(string $sourcePath): string
+    {
+        return str_replace(".yaml", "", basename($sourcePath)) . '.md';
+    }
+
+    /**
+     * @param string $input
+     * @param string $output
+     * @param string $builder
+     * @return string[]
+     */
+    public function getCommandCall(string $input, string $output, string $builder): array
+    {
+        return ['yamldocs', 'build', 'markdown', "file=$input", "output=$output", "builder=$builder"];
     }
 }

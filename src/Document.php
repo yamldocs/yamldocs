@@ -2,6 +2,7 @@
 
 namespace Yamldocs;
 
+use App\Exception\InputError;
 use Symfony\Component\Yaml\Yaml;
 
 class Document
@@ -14,6 +15,11 @@ class Document
 
     /**
      * @param string $filePath
+<<<<<<< HEAD:src/Document.php
+=======
+     * @param string|null $templateDir
+     * @throws \Exception
+>>>>>>> main:app/Document.php
      */
     public function __construct(string $filePath)
     {
@@ -23,10 +29,16 @@ class Document
 
     /**
      * @return void
+     * @throws \Exception
      */
     public function loadYaml(): void
     {
-        $this->yaml = Yaml::parseFile($this->filePath);
+        $content = Yaml::parseFile($this->filePath);
+        if (!is_array($content)) {
+            throw new InputError("This file could not be loaded. Are you sure it's YAML?");
+        }
+
+        $this->yaml = $content;
         $this->loadMetadata();
         $this->title = $this->getTitle();
     }

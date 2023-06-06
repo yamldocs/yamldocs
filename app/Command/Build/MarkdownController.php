@@ -5,7 +5,6 @@ namespace App\Command\Build;
 use Exception;
 use Minicli\Command\CommandController;
 use Minicli\FileNotFoundException;
-use Yamldocs\Builder\DefaultBuilder;
 use Yamldocs\BuilderService;
 use Yamldocs\Document;
 

@@ -8,7 +8,7 @@ use Yamldocs\Document;
 
 class TestBuilder implements BuilderInterface
 {
-    public function configure(Config $config): void
+    public function configure(Config $config, array $builderOptions = []): void
     {
         //
     }
