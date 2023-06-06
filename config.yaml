@@ -1,10 +1,6 @@
-app_path:
-    - "@minicli/command-help"
-    - "@minicli/command-stencil"
-
 builders:
-    default: Builders\\DefaultBuilder
-    test: Builders\\TestBuilder
+    - name: default
+      class: Yamldocs\Builder\DefaultBuilder
 
 templatesDir: templates
 debug: true

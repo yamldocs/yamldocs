@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Yamldocs;
 
 use App\Exception\InputError;
 use Symfony\Component\Yaml\Yaml;
@@ -8,7 +8,6 @@ use Symfony\Component\Yaml\Yaml;
 class Document
 {
     public string $filePath;
-    public string $templateDir;
     public string $title;
     public array $yaml = [];
     public array $meta = [];
@@ -16,13 +15,15 @@ class Document
 
     /**
      * @param string $filePath
+<<<<<<< HEAD:src/Document.php
+=======
      * @param string|null $templateDir
      * @throws \Exception
+>>>>>>> main:app/Document.php
      */
-    public function __construct(string $filePath, string $templateDir = null)
+    public function __construct(string $filePath)
     {
         $this->filePath = $filePath;
-        $this->templateDir = $templateDir ?? __DIR__ . '/../templates';
         $this->loadYaml();
     }
 

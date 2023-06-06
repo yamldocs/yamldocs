@@ -1,9 +1,9 @@
 <?php
 
-use App\YamlConfig;
+use Yamldocs\YamldocsConfig;
 
 test('YAML config is loaded', function () {
-    $config = new YamlConfig();
+    $config = new YamldocsConfig();
     $config->load(__DIR__ . '/../Assets/config.yaml');
 
     $this->assertArrayHasKey('app_path', $config->parameters);

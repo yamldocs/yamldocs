@@ -2,16 +2,15 @@
 
 namespace App\Command\Build;
 
-use App\Exception\InputError;
-use Exception;
 use Minicli\Command\CommandController;
 use Minicli\Exception\CommandNotFoundException;
-use Symfony\Component\Yaml\Yaml;
+use Throwable;
 
 class DocsController extends CommandController
 {
     /**
-     * @throws Exception
+     * @throws CommandNotFoundException
+     * @throws Throwable
      */
     public function handle(): void
     {
@@ -20,23 +19,23 @@ class DocsController extends CommandController
         $builder = "default";
 
         if ($dir === null) {
-            $this->getPrinter()->error('You must provide a "source=" parameter pointing to the directory containing yaml files to build docs from.');
-            throw new Exception("Missing 'source' parameter");
+            $this->error('You must provide a "source=" parameter pointing to the directory containing yaml files to build docs from.');
+            throw new \Exception("Missing 'source' parameter");
         }
 
         if ($output === null) {
-            $this->getPrinter()->error('You must provide a "output=" parameter pointing to a directory where to output docs.');
-            throw new Exception("Missing 'output' parameter");
+            $this->error('You must provide a "output=" parameter pointing to a directory where to output docs.');
+            throw new \Exception("Missing 'output' parameter");
         }
 
         if (!is_dir($dir)) {
-            $this->getPrinter()->error('Source directory not found.');
-            throw new Exception("Source directory $dir not found.");
+            $this->error('Source directory not found.');
+            throw new \Exception("Source directory $dir not found.");
         }
 
         if (!is_dir($output)) {
-            $this->getPrinter()->error('Output directory not found.');
-            throw new Exception("Output $output not found.");
+            $this->error('Output directory not found.');
+            throw new \Exception("Output $output not found.");
         }
 
         if ($this->hasParam('builder') && ($this->getParam('builder') !== 'default')) {
@@ -51,7 +50,7 @@ class DocsController extends CommandController
             $this->buildDocs($input, $output, $builder);
         }
 
-        $this->getPrinter()->success("Docs markdown build finished.");
+        $this->success("Docs markdown build finished.");
     }
 
     /**

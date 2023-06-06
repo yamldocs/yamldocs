@@ -2,31 +2,33 @@
 
 namespace App\Command\Build;
 
-use App\Mark;
-use Minicli\App;
+use Exception;
 use Minicli\Command\CommandController;
-use Symfony\Component\Yaml\Yaml;
+use Yamldocs\Mark;
 
 class IndexController extends CommandController
 {
+    /**
+     * @throws Exception
+     */
     public function handle(): void
     {
         $dir = $this->getParam('source');
         $output = $this->getParam('output');
 
         if ($dir === null) {
-            $this->getPrinter()->error('You must provide a "source=" parameter pointing to the directory containing markdown files.');
-            throw new \Exception("Missing 'source' parameter");
+            $this->error('You must provide a "source=" parameter pointing to the directory containing markdown files.');
+            throw new Exception("Missing 'source' parameter");
         }
 
         if ($output === null) {
-            $this->getPrinter()->error('You must provide a "output=" parameter specifying a file path for saving your index.');
-            throw new \Exception("Missing 'output' parameter");
+            $this->error('You must provide a "output=" parameter specifying a file path for saving your index.');
+            throw new Exception("Missing 'output' parameter");
         }
 
         if (!is_dir($dir)) {
-            $this->getPrinter()->error('Source directory not found.');
-            throw new \Exception("Source directory $dir not found.");
+            $this->error('Source directory not found.');
+            throw new Exception("Source directory $dir not found.");
         }
 
         $table = [];
@@ -45,6 +47,6 @@ class IndexController extends CommandController
         fwrite($outputFile, $content);
         fclose($outputFile);
 
-        $this->getPrinter()->success("Docs index build finished.");
+        $this->success("Docs index build finished.");
     }
 }

@@ -1,5 +1,12 @@
 <?php
 
+use Minicli\App;
+use Minicli\Command\CommandCall;
+use Minicli\Config;
+use Yamldocs\BuilderService;
+use Yamldocs\Document;
+use Yamldocs\YamldocsConfig;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -39,7 +46,36 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function getCommandsPath(): string
 {
-    // ..
+    return __DIR__ . '/../app/Command';
+}
+
+function getConfigAsArray(?string $configFile = null): array
+{
+    $config = new YamldocsConfig();
+    if ($configFile === null) {
+        $configFile = __DIR__ . '/Assets/config.yaml';
+    }
+    $config->load($configFile);
+    $config->set('app_path', getCommandsPath());
+    $config->set('app_root', __DIR__ . '/Assets');
+    return $config->parameters;
+}
+
+function getApp(?string $configFile = null): App
+{
+    $config = new YamldocsConfig();
+    if ($configFile === null) {
+        $configFile = __DIR__ . '/Assets/config.yaml';
+    }
+    $app = new App(getConfigAsArray($configFile));
+    $app->addService('builder', new BuilderService());
+
+    return $app;
+}
+
+function getDocument(): Document
+{
+    return new Document(__DIR__ . '/Assets/test.yaml', __DIR__ . '/../templates');
 }

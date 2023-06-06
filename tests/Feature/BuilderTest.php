@@ -1,7 +1,8 @@
 <?php
 
-use Builders\TestBuilder;
-use Builders\DefaultBuilder;
+use Minicli\Config;
+use Yamldocs\Builder\TestBuilder;
+use Yamldocs\Builder\DefaultBuilder;
 
 test('TestBuilder works', function () {
     $builder = new TestBuilder();
@@ -12,7 +13,15 @@ test('TestBuilder works', function () {
 
 test('DefaultBuilder loads YAML', function () {
     $builder = new DefaultBuilder();
+    $builder->configure(new Config(getConfigAsArray()));
     $markdown = $builder->getMarkdown(getDocument());
 
     $this->assertStringContainsString("### Reference", $markdown);
+});
+
+test('DefaultBuilder has default templatesDir', function () {
+    $builder = new DefaultBuilder();
+    $builder->configure(new Config(getConfigAsArray()));
+
+    $this->assertSame("templates", $builder->templatesDir);
 });

@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace Yamldocs;
 
 use Symfony\Component\Yaml\Yaml;
 
-class YamlConfig
+class YamldocsConfig
 {
     public string $filePath;
 
@@ -14,6 +14,16 @@ class YamlConfig
     {
         $this->filePath = $filePath;
         $this->parameters = Yaml::parseFile($filePath);
+        $this->loadEnvVars();
+    }
+
+    public function loadEnvVars(): void
+    {
+        foreach (getenv() as $name => $value) {
+            if (str_starts_with($name,'YAMLDOCS_')) {
+                $this->set($name, $value);
+            }
+        }
     }
 
     public function merge(string $filePath): void

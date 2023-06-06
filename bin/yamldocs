@@ -18,14 +18,20 @@ require $app_root . '/vendor/autoload.php';
 
 use Minicli\App;
 use Minicli\Exception\CommandNotFoundException;
-use App\YamlConfig;
+use Yamldocs\BuilderService;
+use Yamldocs\YamldocsConfig;
 
-$config = new YamlConfig();
+$config = new YamldocsConfig();
 $config->load($source_root . '/config.yaml');
-$paths = $config->get('app_path');
-$paths[] = $source_root . '/app/Command';
+
+$paths = [
+    $source_root . '/app/Command',
+    '@minicli/command-help'
+];
 
 $config->set('app_path', $paths);
+$config->set('app_root', $app_root);
+$config->set('source_root', $source_root);
 
 if (is_file($app_root . '/yamldocs.yaml')) {
     $config->merge($app_root . '/yamldocs.yaml');
@@ -33,17 +39,20 @@ if (is_file($app_root . '/yamldocs.yaml')) {
 
 $app = new App($config->parameters);
 $app->setSignature($signature);
+$app->addService('builder', new BuilderService());
+
 try {
     $app->runCommand($argv);
 } catch (CommandNotFoundException $notFoundException) {
-    $app->getPrinter()->error("Command Not Found.");
+    $app->error("Command Not Found.");
     return 1;
 } catch (Exception $exception) {
     if ($app->config->debug) {
-        $app->getPrinter()->error("An error occurred:");
-        $app->getPrinter()->error($exception->getMessage());
+        $app->error("An error occurred:");
+        $app->error($exception->getMessage());
     }
     return 1;
+} catch (Throwable $e) {
 }
 
 return 0;
