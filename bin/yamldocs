@@ -10,7 +10,7 @@ $signature = "./bin/yamldocs help";
 
 if (!is_file($app_root . '/vendor/autoload.php')) {
     $app_root = dirname(__DIR__, 4);
-    $source_root = $app_root . '/vendor/erikaheidi/yamldocs';
+    $source_root = $app_root . '/vendor/yamldocs/yamldocs';
     $signature = "./vendor/bin/yamldocs help";
 }
 
