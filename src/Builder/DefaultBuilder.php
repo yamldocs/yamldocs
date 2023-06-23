@@ -25,14 +25,7 @@ class DefaultBuilder implements BuilderInterface
     {
         $this->builderOptions = $builderOptions;
         $templatesDir = $this->builderOptions['templatesDir'] ?? $config->templatesDir;
-
-        if (!is_dir($templatesDir)) {
-            if (!is_dir($config->app_root . '/' . $templatesDir)) {
-                throw new FileNotFoundException("Templates directory not found.");
-            }
-            $templatesDir = $config->app_root . '/' . $templatesDir;
-        }
-        $this->setTemplatesDir($templatesDir);
+        $this->setTemplatesDir($templatesDir, $config);
 
         $this->tplPage = $this->builderOptions['tplPage'] ?? "reference_page";
         $this->tplSection = $this->builderOptions['tplSection'] ?? "reference_page_section";
@@ -40,10 +33,18 @@ class DefaultBuilder implements BuilderInterface
 
     /**
      * @param string $templatesDir
+     * @param Config $config
      * @return void
+     * @throws FileNotFoundException
      */
-    public function setTemplatesDir(string $templatesDir): void
+    public function setTemplatesDir(string $templatesDir, Config $config): void
     {
+        if (!is_dir($templatesDir)) {
+            if (!is_dir($config->app_root . '/' . $templatesDir)) {
+                throw new FileNotFoundException("Templates directory not found.");
+            }
+            $templatesDir = $config->app_root . '/' . $templatesDir;
+        }
         $this->templatesDir = $templatesDir;
     }
 
