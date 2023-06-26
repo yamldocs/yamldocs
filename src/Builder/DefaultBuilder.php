@@ -24,7 +24,7 @@ class DefaultBuilder implements BuilderInterface
     public function configure(Config $config, array $builderOptions = []): void
     {
         $this->builderOptions = $builderOptions;
-        $templatesDir = $this->builderOptions['templatesDir'] ?? $config->templatesDir;
+        $templatesDir = envconfig('YAMLDOCS_TEMPLATES', $this->builderOptions['templatesDir'] ?? $config->templatesDir);
         $this->setTemplatesDir($templatesDir, $config);
 
         $this->tplPage = $this->builderOptions['tplPage'] ?? "reference_page";
