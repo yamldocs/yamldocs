@@ -14,7 +14,7 @@
     "minicli/minicli": "^4.0",
     "minicli/command-help": "^1.0",
     "symfony/yaml": "^6.1",
-    "minicli/stencil": "^0.1.1"
+    "minicli/stencil": "^0.2.1"
   },
   "require-dev": {
     "pestphp/pest": "^1.21"
